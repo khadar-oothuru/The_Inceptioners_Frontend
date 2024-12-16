@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AdminProvider } from "./context/AdminContext";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import ManagePackages from "./pages/ManagePackages";
-import ViewBookings from "./pages/ViewBookings";
+import ManagePackages from "./pages/Admin/ManagePackages";
+import ViewBookings from "./pages/Admin/ViewBookings";
 import UserBookings from "./pages/BookNow"; // Regular user bookings page
 import InvoicePage from "./pages/InvoicePage";
 import PackageDetails from "./pages/PackageDetails";
 import BookNow from "./pages/BookNow";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import Admin from "./pages/Admin";
+import AdminLogin from "./pages/Admin/AdminLogin";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import Admin from "./pages/Admin/Admin";
 import Packages from "./pages/Packages";
 import AboutUs from "./pages/AboutUs";
 

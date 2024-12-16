@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/"); // Redirect to the homepage or desired location after logout
   };
 
   return (
@@ -38,37 +38,49 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-white text-[#001337] rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <Link to="/" className="hover:text-[#ff7c5b] text-lg">
-                Packages
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" className="hover:text-[#ff7c5b] text-lg">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-[#ff7c5b] text-lg">
-                Contact Us
-              </Link>
-            </li>
-            {isAdminLoggedIn ? (
+            {!isAdminLoggedIn && (
+              <>
+                <li>
+                  <Link to="/" className="hover:text-[#ff7c5b] text-lg">
+                    Packages
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="hover:text-[#ff7c5b] text-lg">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="hover:text-[#ff7c5b] text-lg">
+                    Contact Us
+                  </Link>
+                </li>
+              </>
+            )}
+            {isAdminLoggedIn && (
               <>
                 <li>
                   <Link
                     to="/admin/dashboard/packages"
                     className="hover:text-[#ff7c5b] text-lg"
                   >
-                    Manage Packages
+                    View All Packages
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/admin/dashboard/bookings"
+                    to="/admin/dashboard/packages/add"
                     className="hover:text-[#ff7c5b] text-lg"
                   >
-                    View Bookings
+                    Add Package
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/dashboard/packages/edit"
+                    className="hover:text-[#ff7c5b] text-lg"
+                  >
+                    Update or Delete Package
                   </Link>
                 </li>
                 <li>
@@ -80,7 +92,8 @@ const Navbar = () => {
                   </button>
                 </li>
               </>
-            ) : (
+            )}
+            {!isAdminLoggedIn && (
               <li>
                 <Link
                   to="/admin/login"
@@ -105,29 +118,49 @@ const Navbar = () => {
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          <li>
-            <Link to="/" className="hover:text-[#ff7c5b] text-lg">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="hover:text-[#ff7c5b] text-lg">
-              About Us
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className="hover:text-[#ff7c5b] text-lg">
-              Contact Us
-            </Link>
-          </li>
-          {isAdminLoggedIn ? (
+          {!isAdminLoggedIn && (
+            <>
+              <li>
+                <Link to="/" className="hover:text-[#ff7c5b] text-lg">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-[#ff7c5b] text-lg">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-[#ff7c5b] text-lg">
+                  Contact Us
+                </Link>
+              </li>
+            </>
+          )}
+          {isAdminLoggedIn && (
             <>
               <li>
                 <Link
                   to="/admin/dashboard/packages"
                   className="hover:text-[#ff7c5b] text-lg"
                 >
-                  Manage Packages
+                  Packages
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/admin/dashboard/packages/add"
+                  className="hover:text-[#ff7c5b] text-lg"
+                >
+                  Add Package
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/admin/dashboard/packages/edit"
+                  className="hover:text-[#ff7c5b] text-lg"
+                >
+                  Update/Delete Package
                 </Link>
               </li>
               <li>
@@ -135,19 +168,11 @@ const Navbar = () => {
                   to="/admin/dashboard/bookings"
                   className="hover:text-[#ff7c5b] text-lg"
                 >
-                  View Bookings
+                 Bookings
                 </Link>
               </li>
-              <li>
-                <button
-                  onClick={handleLogout}
-                  className="text-red-500 hover:text-[#ff7c5b] text-lg"
-                >
-                  Logout
-                </button>
-              </li>
             </>
-          ) : null}
+          )}
         </ul>
       </div>
       <div className="navbar-end">
@@ -159,6 +184,15 @@ const Navbar = () => {
           >
             Admin Login
           </Link>
+        )}
+        {isAdminLoggedIn && (
+          <button
+            onClick={handleLogout}
+            className="btn bg-[#ff7c5b] text-white hover:bg-[#001337] text-lg"
+            style={{ minWidth: "120px", marginRight: "1.5rem" }}
+          >
+            Logout
+          </button>
         )}
       </div>
     </div>
