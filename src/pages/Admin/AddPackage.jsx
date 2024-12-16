@@ -13,25 +13,32 @@ const AddPackage = () => {
     image: "",
   });
   const [loading, setLoading] = useState(false);
-  const apiUrl = "https://the-inceptioners-backend.vercel.app/api/admin/package"; // Validate this URL
+  const apiUrl = "https://the-inceptioners-backend.vercel.app/api/admin/package"; // Adjust based on your backend
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const validateDates = (dates) => {
+    return dates.every((date) => /^\d{4}-\d{2}-\d{2}$/.test(date));
+  };
+
+  const validateImageURL = (url) => {
+    return /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/i.test(url);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic Validation
-    if (
-      !form.title.trim() ||
-      !form.description.trim() ||
-      !form.price.trim() ||
-      !form.availableDates.trim() ||
-      !form.image.trim()
-    ) {
-      toast.error("All fields are required!");
+    // Validation
+    if (!form.title.trim() || form.title.length < 3) {
+      toast.error("Title must be at least 3 characters long.");
+      return;
+    }
+
+    if (!form.description.trim() || form.description.length < 10) {
+      toast.error("Description must be at least 10 characters long.");
       return;
     }
 
@@ -40,17 +47,33 @@ const AddPackage = () => {
       return;
     }
 
-    // Convert availableDates to an array
+    if (!form.availableDates.trim()) {
+      toast.error("At least one available date is required.");
+      return;
+    }
+
     const datesArray = form.availableDates.split(",").map((date) => date.trim());
+    if (!validateDates(datesArray)) {
+      toast.error("Available dates must be in YYYY-MM-DD format.");
+      return;
+    }
+
+    if (!validateImageURL(form.image)) {
+      toast.error("Please provide a valid image URL (e.g., ends with .png, .jpg).");
+      return;
+    }
 
     setLoading(true);
     try {
       const payload = {
-        ...form,
+        title: form.title.trim(),
+        description: form.description.trim(),
+        price: parseFloat(form.price),
         availableDates: datesArray,
+        image: form.image.trim(),
       };
 
-      await axios.post(`${apiUrl}/packages`, payload);
+      const response = await axios.post(apiUrl, payload);
 
       toast.success("Package added successfully!", {
         position: "top-right",
@@ -62,7 +85,6 @@ const AddPackage = () => {
         theme: "light",
       });
 
-      // Navigate to Admin page
       navigate("/admin");
     } catch (error) {
       const errorMessage =
@@ -96,7 +118,7 @@ const AddPackage = () => {
           <input
             type="text"
             name="title"
-            placeholder="Enter package title"
+            placeholder="Enter package title (min 3 characters)"
             value={form.title}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
@@ -107,7 +129,7 @@ const AddPackage = () => {
           <textarea
             name="description"
             rows="5"
-            placeholder="Enter package description"
+            placeholder="Enter package description (min 10 characters)"
             value={form.description}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
@@ -118,7 +140,7 @@ const AddPackage = () => {
           <input
             type="number"
             name="price"
-            placeholder="Enter price"
+            placeholder="Enter price (positive number)"
             value={form.price}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
@@ -129,7 +151,7 @@ const AddPackage = () => {
           <input
             type="text"
             name="availableDates"
-            placeholder="Enter available dates (comma-separated)"
+            placeholder="Enter dates (comma-separated, YYYY-MM-DD)"
             value={form.availableDates}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
@@ -140,7 +162,7 @@ const AddPackage = () => {
           <input
             type="text"
             name="image"
-            placeholder="Enter image URL"
+            placeholder="Enter image URL (e.g., ends with .png, .jpg)"
             value={form.image}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
