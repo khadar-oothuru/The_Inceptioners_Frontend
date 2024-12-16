@@ -28,7 +28,7 @@ const Home = () => {
           onMouseEnter={() => setIsHovered(true)} // Dim background on hover
           onMouseLeave={() => setIsHovered(false)} // Reset background on leave
         >
-          <Link to="/package">Explore Packages</Link>
+          <Link to="/packages">Explore Packages</Link>
         </button>
       </div>
     </div>
