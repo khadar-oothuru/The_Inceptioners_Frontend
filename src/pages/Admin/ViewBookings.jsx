@@ -19,17 +19,20 @@ const ViewBookings = () => {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen p-4 overflow-auto">
+        <div className="bg-slate-50 min-h-screen p-4">
             {/* Centered Heading */}
             <h1 className="text-2xl font-extrabold mb-6 text-[#001337] text-center w-full">
                 View Bookings
             </h1>
 
             {bookings.length > 0 ? (
-                <ul className="space-y-4 max-h-[calc(100vh-120px)] overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {bookings.map((booking) => (
-                        <li key={booking._id} className="bg-white border p-4 mb-4 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <h2 className="text-xl font-bold mb-3 text-[#001337]">Booking ID: {booking._id}</h2>
+                        <div
+                            key={booking._id}
+                            className="bg-slate-100 border p-3 mb-4 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 w-full"
+                        >
+                            <h2 className="text-lg font-bold mb-3 text-[#001337]">Booking ID: {booking._id}</h2>
                             
                             {/* Name with User Icon */}
                             <p className="flex items-center text-[#ff7c5b] mb-2">
@@ -72,9 +75,9 @@ const ViewBookings = () => {
                                 <FaInfoCircle className="h-5 w-5 mr-2 text-[#001337]" />
                                 <strong>Special Requests:</strong> {booking.specialRequests || 'None'}
                             </p>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p className="text-gray-500">No bookings available.</p>
             )}

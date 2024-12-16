@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import home from "../assets/home.jpg";
+import home from "../assets/home.webp";
 
 const Home = () => {
   const [isHovered, setIsHovered] = useState(false); // State for hover effect

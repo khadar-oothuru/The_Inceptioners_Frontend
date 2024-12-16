@@ -21,7 +21,7 @@ const AdminLogin = () => {
     e.preventDefault();
     const success = await login(credentials);
     if (success) {
-      navigate("/admin/dashboard");
+      navigate("/admin");
     } else {
       setError("Invalid credentials");
     }
