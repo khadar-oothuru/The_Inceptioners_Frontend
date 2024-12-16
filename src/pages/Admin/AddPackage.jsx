@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify"; // Importing toast
-import "react-toastify/dist/ReactToastify.css"; // Importing toast styles
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddPackage = () => {
   const [form, setForm] = useState({
@@ -12,7 +12,8 @@ const AddPackage = () => {
     availableDates: "",
     image: "",
   });
-  const apiUrl = "https://the-inceptioners-backend.vercel.app/api/admin";
+  const [loading, setLoading] = useState(false);
+  const apiUrl = "https://the-inceptioners-backend.vercel.app/api/admin/package"; // Validate this URL
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -21,10 +22,36 @@ const AddPackage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic Validation
+    if (
+      !form.title.trim() ||
+      !form.description.trim() ||
+      !form.price.trim() ||
+      !form.availableDates.trim() ||
+      !form.image.trim()
+    ) {
+      toast.error("All fields are required!");
+      return;
+    }
+
+    if (isNaN(form.price) || form.price <= 0) {
+      toast.error("Price must be a positive number.");
+      return;
+    }
+
+    // Convert availableDates to an array
+    const datesArray = form.availableDates.split(",").map((date) => date.trim());
+
+    setLoading(true);
     try {
-      await axios.post(`${apiUrl}/packages`, form);
-      
-      // Show success toast
+      const payload = {
+        ...form,
+        availableDates: datesArray,
+      };
+
+      await axios.post(`${apiUrl}/packages`, payload);
+
       toast.success("Package added successfully!", {
         position: "top-right",
         autoClose: 3000,
@@ -35,10 +62,13 @@ const AddPackage = () => {
         theme: "light",
       });
 
-      navigate("/admin"); // Redirect to Admin page after adding
+      // Navigate to Admin page
+      navigate("/admin");
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Error adding package.";
       console.error("Error adding package:", error);
-      toast.error("Error adding package.", {
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -47,6 +77,8 @@ const AddPackage = () => {
         draggable: true,
         theme: "light",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,13 +125,11 @@ const AddPackage = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">
-            Available Dates
-          </label>
+          <label className="block text-lg font-medium mb-2">Available Dates</label>
           <input
             type="text"
             name="availableDates"
-            placeholder="Enter available dates"
+            placeholder="Enter available dates (comma-separated)"
             value={form.availableDates}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
@@ -115,16 +145,29 @@ const AddPackage = () => {
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
           />
+          {form.image && (
+            <div className="mt-2">
+              <img
+                src={form.image}
+                alt="Preview"
+                className="w-full h-48 object-cover border rounded-lg"
+              />
+            </div>
+          )}
         </div>
         <button
           type="submit"
-          className="w-full bg-[#001337] text-white p-3 rounded-lg hover:bg-[#ff7c5b] transition-all"
+          className={`w-full p-3 rounded-lg transition-all ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#001337] hover:bg-[#ff7c5b] text-white"
+          }`}
+          disabled={loading}
         >
-          Add Package
+          {loading ? "Adding..." : "Add Package"}
         </button>
       </form>
 
-      {/* Toast container to display notifications */}
       <ToastContainer />
     </div>
   );

@@ -27,7 +27,7 @@ const PackageCard = ({ pkg }) => {
         </p>
 
         {/* Price */}
-        <p className="text-[#ff7c5b] font-bold mt-4 text-lg">${pkg.price}</p>
+        <p className="text-[#ff7c5b] font-bold mt-4 text-lg">₹{pkg.price}</p>
 
         {/* Card Actions */}
         <div className="flex justify-between items-center mt-6 space-x-4">
