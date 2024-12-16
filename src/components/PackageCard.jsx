@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const PackageCard = ({ pkg }) => {
   return (
-    <div className="card bg-white w-full lg:w-[450px] shadow-lg rounded-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
+    <div className="card bg-white w-full lg:w-[400px] shadow-lg rounded-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
       {/* Card Image */}
       <figure className="relative overflow-hidden rounded-t-lg">
         <img

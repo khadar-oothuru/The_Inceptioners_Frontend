@@ -12,7 +12,7 @@ const ContactUs = () => {
           <input
             type="text"
             placeholder="Enter your name"
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
           />
         </div>
         <div className="mb-4">
@@ -20,7 +20,7 @@ const ContactUs = () => {
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
           />
         </div>
         <div className="mb-4">
@@ -28,12 +28,12 @@ const ContactUs = () => {
           <textarea
             rows="5"
             placeholder="Your message"
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
           ></textarea>
         </div>
         <button
           type="submit"
-          className="w-full bg-[#ff7c5b] text-white p-3 rounded-lg hover:bg-[#001337] transition-all"
+          className="w-full bg-[#001337]  text-white p-3 rounded-lg hover:bg-[#ff7c5b] transition-all"
         >
           Submit
         </button>

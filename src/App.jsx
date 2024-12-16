@@ -13,7 +13,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import Admin from "./pages/Admin";
 import Packages from "./pages/Packages";
-import AboutUs from "./pages/AboutUs"
+import AboutUs from "./pages/AboutUs";
 
 import ContactUs from "./pages/ContactUs";
 import Footer from "./pages/Footer";

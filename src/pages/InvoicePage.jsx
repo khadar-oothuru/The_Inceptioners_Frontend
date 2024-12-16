@@ -1,128 +1,115 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const InvoicePage = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { booking, packageDetails, selectedDate } = location.state || {}; // Extract selectedDate
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isInvoiceDownloaded, setIsInvoiceDownloaded] = useState(false);
 
-    if (!booking) {
-        return (
-            <div className="text-center mt-10">
-                <p>No booking details found.</p>
-                <Link to="/" className="text-blue-500 underline">
-                    Go to Home
-                </Link>
-            </div>
-        );
+  const {
+    booking = {},
+    packageTitle = "Unknown Package",
+    packagePrice = 0,
+    selectedDate = "Not selected",
+    totalPrice = 0,
+  } = location.state || {};
+
+  const handleDownloadInvoice = () => {
+    try {
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.text("Invoice", 20, 20);
+      doc.setFontSize(12);
+
+      doc.text(`Name: ${booking.name || "N/A"}`, 20, 30);
+      doc.text(`Email: ${booking.email || "N/A"}`, 20, 40);
+      doc.text(`Phone: ${booking.phone || "N/A"}`, 20, 50);
+      doc.text(`Travelers: ${booking.travelers || "N/A"}`, 20, 60);
+      doc.text(`Special Requests: ${booking.specialRequests || "None"}`, 20, 70);
+      doc.text(`Total Price: ₹${totalPrice}`, 20, 80);
+
+      doc.text(`Package Title: ${packageTitle}`, 20, 90);
+      doc.text(`Package Price: ₹${packagePrice}`, 20, 100);
+      doc.text(`Selected Date: ${selectedDate}`, 20, 110);
+
+      doc.save("invoice.pdf");
+
+      // Set the state to indicate the invoice has been downloaded
+      setIsInvoiceDownloaded(true);
+      toast.success("Invoice downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download invoice.");
+      console.error("PDF Error:", error);
     }
+  };
 
-    const handleDownloadInvoice = () => {
-        try {
-            const doc = new jsPDF();
+  // Prevent navigation until invoice is downloaded
+  const handleNavigationAttempt = (e) => {
+    if (!isInvoiceDownloaded) {
+      e.preventDefault(); // Prevent navigation
+      toast.error("Please download the invoice before navigating.");
+    }
+  };
 
-            // Add invoice details to the PDF
-            doc.setFontSize(20);
-            doc.text("Invoice", 20, 20);
-            doc.setFontSize(12);
-            doc.text(`Name: ${booking.name}`, 20, 30);
-            doc.text(`Email: ${booking.email}`, 20, 40);
-            doc.text(`Phone: ${booking.phone}`, 20, 50);
-            doc.text(`Travelers: ${booking.travelers}`, 20, 60);
-            doc.text(
-                `Special Requests: ${booking.specialRequests || "None"}`,
-                20,
-                70
-            );
-            doc.text(`Total Price: $${booking.totalPrice.toFixed(2)}`, 20, 80);
+  useEffect(() => {
+    // Attach event listener to prevent navigation
+    window.addEventListener("beforeunload", handleNavigationAttempt);
 
-            // Add package details
-            doc.text(`Package Title: ${packageDetails.title}`, 20, 90);
-            doc.text(`Package Price: $${packageDetails.price}`, 20, 100);
-            doc.text(
-                `Selected Date: ${Array.isArray(selectedDate) ? selectedDate.join(", ") : selectedDate || "Not selected"}`,
-                20,
-                110
-            ); // Add selected date (array or single)
-            doc.text(
-                `Package Dates: ${
-                    Array.isArray(packageDetails.dates)
-                        ? packageDetails.dates.join(", ")
-                        : packageDetails.dates
-                }`,
-                20,
-                120
-            );
-
-            // Save the PDF
-            doc.save("invoice.pdf");
-
-            // Show success toast
-            toast.success("Invoice downloaded successfully!");
-
-            // Navigate to the next page after a delay
-            setTimeout(() => {
-                navigate("/");
-            }, 2000); // 2-second delay for user to see the toast
-        } catch (error) {
-            console.error("Error downloading invoice:", error);
-            toast.error("Failed to download invoice. Please try again.");
-        }
+    return () => {
+      window.removeEventListener("beforeunload", handleNavigationAttempt);
     };
+  }, [isInvoiceDownloaded]);
 
-    return (
-        <div className="max-w-2xl mx-auto mt-10 p-5 border rounded shadow">
-            <h1 className="text-2xl font-bold mb-4">Invoice</h1>
-            <div className="space-y-2">
-                <p>
-                    <strong>Name:</strong> {booking.name}
-                </p>
-                <p>
-                    <strong>Email:</strong> {booking.email}
-                </p>
-                <p>
-                    <strong>Phone:</strong> {booking.phone}
-                </p>
-                <p>
-                    <strong>Travelers:</strong> {booking.travelers}
-                </p>
-                <p>
-                    <strong>Special Requests:</strong> {booking.specialRequests || "None"}
-                </p>
-                <p>
-                    <strong>Total Price:</strong> ${booking.totalPrice.toFixed(2)}
-                </p>
-                <p>
-                    <strong>Selected Date:</strong> 
-                   {  booking.selectedDate}
-                </p>
-                <hr className="my-4" />
-                <div>
-                    <strong>Package Details:</strong>
-                    <p><strong>Title:</strong> {packageDetails.title}</p>
-                    <p><strong>Price:</strong> ${packageDetails.price}</p>
-              
-                </div>
-            </div>
-            <div className="mt-6 space-x-4">
-                <Link to="/" className="bg-blue-500 text-white py-2 px-4 rounded">
-                    Back to Home
-                </Link>
-                <button
-                    onClick={handleDownloadInvoice}
-                    className="bg-green-500 text-white py-2 px-4 rounded"
-                >
-                    Download Invoice
-                </button>
-            </div>
+  if (!location.state) {
+    return <p className="text-red-500 text-center">Error: Missing booking data.</p>;
+  }
 
-            {/* Toast Notifications */}
-            <ToastContainer position="top-center" />
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-3xl font-bold text-center text-[#001337] mb-6">Invoice</h1>
+      <div className="container mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold">Booking Details</h2>
+        <p>Name: {booking?.name || "N/A"}</p>
+        <p>Email: {booking?.email || "N/A"}</p>
+        <p>Phone: {booking?.phone || "N/A"}</p>
+        <p>Number of Travelers: {booking?.travelers || "N/A"}</p>
+        <p>Special Requests: {booking?.specialRequests || "None"}</p>
+        <p>Selected Date: {selectedDate}</p>
+        <p>Total Price: ₹{totalPrice}</p>
+
+        <h3 className="text-xl font-semibold mt-6">Package Details</h3>
+        <p>Package Title: {packageTitle}</p>
+        <p>Package Price: ₹{packagePrice}</p>
+
+        <div className="flex justify-center space-x-4 mt-4">
+          <button
+            onClick={() => {
+              if (isInvoiceDownloaded) {
+                navigate("/"); // Navigate to home after downloading the invoice
+              } else {
+                toast.error("Please download the invoice before navigating.");
+              }
+            }}
+            className="w-[45%] bg-[#001337] text-white py-3 rounded-md hover:bg-[#ff7c5b] transition-all"
+          >
+            Home
+          </button>
+
+          <button
+            onClick={handleDownloadInvoice}
+            className="w-[45%] bg-[#001337] text-white py-3 rounded-md hover:bg-[#ff7c5b] transition-all"
+          >
+            Download Invoice
+          </button>
         </div>
-    );
+
+        <ToastContainer position="top-center" />
+      </div>
+    </div>
+  );
 };
 
 export default InvoicePage;

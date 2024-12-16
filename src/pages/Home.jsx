@@ -22,14 +22,14 @@ const Home = () => {
         <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
           Discover Your Next Adventure
         </h1>
-        <Link
-          to="/package"
-          className="btn bg-[#001337] text-white text-center hover:bg-[#ff7c5b] hover:scale-105 text-lg px-8 py-4 rounded-lg flex items-center justify-center transition-transform duration-300"
+        <button
+          className="btn bg-[#001337] text-white hover:bg-[#ff7c5b] hover:scale-105 text-lg px-8 py-2 rounded-lg flex items-center justify-center h-12 transition-transform duration-300"
+          // Use navigate to go to /package
           onMouseEnter={() => setIsHovered(true)} // Dim background on hover
           onMouseLeave={() => setIsHovered(false)} // Reset background on leave
         >
-            Explore Packages
-        </Link>
+          <Link to="/package">Explore Packages</Link>
+        </button>
       </div>
     </div>
   );
