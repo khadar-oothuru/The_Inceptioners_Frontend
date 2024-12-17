@@ -100,12 +100,11 @@ const Navbar = () => {
         </div>
 
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-white">
+        <Link to="/" className="text-xl font-bold permanent-marker-regular text-white">
           <span>Travel</span>{" "}
           <span className="text-[#ff7c5b]">
             Agency{" "}
-           
-         
+
           </span>
         </Link>
       </div>

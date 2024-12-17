@@ -19,7 +19,7 @@ const Home = () => {
 
       {/* Centered Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+        <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 trade-winds-regular">
           Discover Your Next Adventure
         </h1>
         <button
