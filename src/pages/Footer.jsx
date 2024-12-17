@@ -19,7 +19,7 @@ const Footer = () => {
         </Link>
         <Link
           className="link link-hover text-lg hover:text-[#ff7c5b]"
-          to="/package"
+          to="/packages"
         >
           Packages
         </Link>
